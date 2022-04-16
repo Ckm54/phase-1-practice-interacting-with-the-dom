@@ -36,12 +36,19 @@ function startCounter() {
     }, 1000)
     
 }
-const intervalId = startCounter()
+let intervalId = startCounter();
 
 function pauseCounter() {
-    isCounting = false
-    clearInterval(intervalId)
-    this.innerText = "resume"
+    isCounting ?
+    ((isCounting = false),
+    clearInterval(intervalId),
+    this.innerText = "resume") :
+    ((isCounting = true),
+    clearInterval(intervalId),
+    intervalId = startCounter(),
+    this.innerText = "pause")
+
+
     buttons.forEach(button => {
         button.disabled = true;
     })
@@ -69,7 +76,7 @@ function likeCounter() {
     const likesContainer = document.querySelector("ul.likes")
 
     let clicksArray = ([].concat(createElementsArray(likesContainer.children).map(arr => parseInt(arr.innerText))));
-    console.log(clicksArray)
+    // console.log(clicksArray)
 
 
     if (clicksArray.includes(countVal)) {
