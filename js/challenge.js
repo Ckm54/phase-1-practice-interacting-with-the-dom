@@ -58,21 +58,33 @@ function lessCounter() {
     counter.innerText = countVal
 }
 
+function getOccurrence(array, value) {
+    var count = 0;
+    array.forEach((v) => (v === value && count++));
+    return count;
+}
+
 function likeCounter() {
     const countVal = parseInt(counter.innerText)
     const likesContainer = document.querySelector("ul.likes")
 
-    console.log([].concat(createElementsArray(likesContainer.children).map(arr => parseInt(arr.innerText))))
-    const like = document.createElement("li")
-    if(counter.innerText === countVal) {
-        likes += 1
-        like.innerHTML = `${countVal} has been liked ${likes} times`
-    }else {
-        likes = 1
-        like.innerHTML = `${countVal} has been liked ${likes} time`
+    let clicksArray = ([].concat(createElementsArray(likesContainer.children).map(arr => parseInt(arr.innerText))));
+    console.log(clicksArray)
+
+
+    if (clicksArray.includes(countVal)) {
+        let likeContainer = document.querySelector(`[num="${countVal}"]`)
+        const likeCount = getOccurrence(clicksArray, countVal)
+        console.log(likeCount)
+        likeContainer.innerHTML = `${countVal} has been liked ${likeCount + 1} times`
+    }
+    else {
+        const like = document.createElement("li")
+        like.setAttribute("num", countVal)
+        like.innerHTML = `${countVal} has been liked 1 time`
+        likesContainer.appendChild(like)
     }
     
-    likesContainer.appendChild(like)
 }
 
 function addComment(event) {
