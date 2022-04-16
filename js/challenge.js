@@ -4,41 +4,53 @@ const pauseBtn = document.getElementById("pause")
 const addBtn = document.getElementById("plus")
 const subtractBtn = document.getElementById("minus")
 const likeBtn = document.getElementById("heart")
-const likesContainer = document.querySelector("ul.likes")
 const buttons = document.querySelectorAll("button")
 const commentForm = document.getElementById("comment-form")
 
-let initial = 0
 let likes = 1
 let valArr = []
 
-pauseBtn.addEventListener("click", stopCounter);
-addBtn.addEventListener("click", startCounter);
+pauseBtn.addEventListener("click", pauseCounter);
+addBtn.addEventListener("click", addtCounter);
 subtractBtn.addEventListener("click", lessCounter)
 likeBtn.addEventListener("click", likeCounter)
 commentForm.addEventListener("submit", addComment)
 
-const intervalId = setInterval(startCounter, 1000)
 var isCounting = true
 
+function createElementsArray(elems){
+    if(Array.isArray(elems)){
+        for(let i = 0; i < elems.length; i++){
+            let c = Array(elems.length)
+            c[i] = elems[i]
+            return c;
+        }
+    }
+    return Array.from(elems)
+}
+
 function startCounter() {
-    initial += 1;
-    counter.innerText = initial
+    return setInterval(function(){
+        let initial = parseInt(counter.innerText)
+        counter.innerText = initial + 1
+    }, 1000)
+    
 }
+const intervalId = startCounter()
 
-function disableBtn() {
-    buttons.forEach(button => {
-        button.disabled = true;
-    })
-    return true
-}
-
-function stopCounter() {
+function pauseCounter() {
     isCounting = false
     clearInterval(intervalId)
     this.innerText = "resume"
-    disableBtn()
+    buttons.forEach(button => {
+        button.disabled = true;
+    })
     this.disabled = false;
+}
+
+function addtCounter() {
+    let countVal = parseInt(counter.innerText) + 1
+    counter.innerText = countVal
 }
 
 function lessCounter() {
@@ -47,17 +59,20 @@ function lessCounter() {
 }
 
 function likeCounter() {
-    let countVal = parseInt(counter.innerText)
-    likes += 1;
-    const text = likesContainer.innerText
-    console.log(text)
-    createLikesDom(countVal, likes)
-}
+    const countVal = parseInt(counter.innerText)
+    const likesContainer = document.querySelector("ul.likes")
 
-function createLikesDom(val, likes) {
-    likesContainer.innerHTML = `
-        <li>${val} has been liked ${likes} number of times
-    `
+    console.log([].concat(createElementsArray(likesContainer.children).map(arr => parseInt(arr.innerText))))
+    const like = document.createElement("li")
+    if(counter.innerText === countVal) {
+        likes += 1
+        like.innerHTML = `${countVal} has been liked ${likes} times`
+    }else {
+        likes = 1
+        like.innerHTML = `${countVal} has been liked ${likes} time`
+    }
+    
+    likesContainer.appendChild(like)
 }
 
 function addComment(event) {
