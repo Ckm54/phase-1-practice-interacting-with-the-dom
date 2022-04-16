@@ -42,17 +42,18 @@ function pauseCounter() {
     isCounting ?
     ((isCounting = false),
     clearInterval(intervalId),
-    this.innerText = "resume") :
+    this.innerText = "resume", 
+    buttons.forEach(button => {
+        button.disabled = true;
+    }),
+    this.disabled = false) :
     ((isCounting = true),
     clearInterval(intervalId),
     intervalId = startCounter(),
-    this.innerText = "pause")
-
-
     buttons.forEach(button => {
-        button.disabled = true;
-    })
-    this.disabled = false;
+        button.disabled = false;
+    }),
+    this.innerText = "pause")
 }
 
 function addtCounter() {
@@ -100,5 +101,5 @@ function addComment(event) {
     const commentPar = document.createElement("p")
     commentPar.innerText = comment 
     document.querySelector("#list").appendChild(commentPar)
-
+    commentForm.reset()
 }
